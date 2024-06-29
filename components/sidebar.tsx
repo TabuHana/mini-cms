@@ -74,7 +74,7 @@ export const Sidebar = () => {
 
   return (
     <div className='h-full w-16 hidden lg:flex flex-col justify-between fixed left-0 top-0 border-r shadow-sm'>
-      <div className='flex flex-col p-4 mt-2 items-center'>
+      <div className='flex flex-col p-4 items-center'>
         <Link href='/'>
           <Image
             src='/logo.svg'

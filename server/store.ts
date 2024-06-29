@@ -32,6 +32,6 @@ export const createStore = async (values: z.infer<typeof StoreSchema>) => {
 
     return store.id;
   } catch (error) {
-    return { error: 'AN ERROR HAS OCCURED WHILE CREATING YOUR STORE' };
+    return { error: 'AN ERROR HAS OCCURED CREATING YOUR STORE' };
   }
 };

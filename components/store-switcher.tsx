@@ -1,10 +1,14 @@
 'use client';
 
 import * as React from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import { Check, ChevronsUpDown, PlusCircle, Store } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import { useStoreModal } from '@/hooks/use-store-modal';
+
 import { Button } from '@/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   Command,
   CommandEmpty,
@@ -14,18 +18,15 @@ import {
   CommandList,
   CommandSeparator,
 } from '@/components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-// import { useStoreModal } from '@/hooks/use-store-modal';
-import { useParams, useRouter } from 'next/navigation';
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
 
-interface ShopSwitcherProps extends PopoverTriggerProps {
+type ShopSwitcherProps = PopoverTriggerProps & {
   items: Record<string, any>[];
-}
+};
 
 export const StoreSwitcher = ({ className, items = [] }: ShopSwitcherProps) => {
-  // const storeModal = useStoreModal();
+  const storeModal = useStoreModal();
   const params = useParams();
   const router = useRouter();
 
@@ -55,10 +56,7 @@ export const StoreSwitcher = ({ className, items = [] }: ShopSwitcherProps) => {
           role='combobox'
           aria-expanded={open}
           aria-label='Select a store'
-          className={cn(
-            'w-[200px] justify-between bg-card rounded-2xl hover:shadow-none transition',
-            className
-          )}
+          className={cn('w-[200px] justify-between bg-card rounded-2xl hover:shadow-none transition', className)}
         >
           <Store className='mr-2 h-4 w-4' />
           {currentStore?.label}
@@ -91,8 +89,7 @@ export const StoreSwitcher = ({ className, items = [] }: ShopSwitcherProps) => {
             <CommandGroup>
               <CommandItem
                 onSelect={() => {
-                  setOpen(false);
-                  // storeModal.onOpen();
+                  storeModal.onOpen()
                 }}
               >
                 <PlusCircle className='mr-2 h-5 w-5' />

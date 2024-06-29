@@ -5,6 +5,8 @@ import { ClerkProvider } from '@clerk/nextjs';
 import { cn } from '@/lib/utils';
 
 import './globals.css';
+import { Toaster } from 'sonner';
+import { ModalProvider } from '@/providers/modal-provider';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -24,7 +26,11 @@ export default function RootLayout({
         lang='en'
         suppressHydrationWarning
       >
-        <body className={cn('min-h-screen bg-background font-nunito antialiased', inter.variable)}>{children}</body>
+        <body className={cn('min-h-screen bg-background font-nunito antialiased', inter.variable)}>
+          <Toaster />
+          <ModalProvider />
+          {children}
+        </body>
       </html>
     </ClerkProvider>
   );
