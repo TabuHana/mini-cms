@@ -2,7 +2,7 @@ import { db } from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 
-import { Header } from '@/components/header';
+import { Navbar } from '@/components/navbar';
 import { Sidebar } from '@/components/sidebar';
 
 export default async function StoreLayout({
@@ -31,7 +31,7 @@ export default async function StoreLayout({
 
   return (
     <>
-      <Header />
+      <Navbar />
       <Sidebar />
       <main className='lg:pl-16 h-full pt-[50px]'>
         <div className='max-w-[calc(100%-50px)] mx-auto pt-6 h-full'>{children}</div>
