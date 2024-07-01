@@ -4,7 +4,7 @@ import { Plus } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
-import { DataTable } from '@/components/data-table';
+import { DataTable } from '@/components/ui/data-table';
 import { Heading } from '@/components/heading';
 import { Separator } from '@/components/ui/separator';
 // import { ApiList } from "@/components/ui/api-list";
@@ -26,7 +26,7 @@ export const ColorClient: React.FC<ColorClientProps> = ({ data }) => {
                     title={`Total Colors - ${data.length}`}
                     description='Manage colors for your products'
                 />
-                <Button onClick={() => router.push(`/${params.shopId}/colors/new`)}>
+                <Button onClick={() => router.push(`/${params.storeId}/colors/new`)}>
                     <Plus className='mr-2 h-4 w-4' /> Add New
                 </Button>
             </div>

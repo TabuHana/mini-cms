@@ -9,9 +9,7 @@ import { Trash } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Color } from '@prisma/client';
 
-import { createColor } from '@/actions/create-color';
-import { updateColor } from '@/actions/update-color';
-import { deleteColor } from '@/actions/delete-color';
+import { createColor, updateColor, deleteColor } from '@/server/color';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -21,127 +19,127 @@ import { AlertModal } from '@/components/modals/alert-modal';
 import { ColorSchema } from '@/schemas';
 
 interface ColorFormProps {
-    initialData: Color | null;
+  initialData: Color | null;
 }
 
 export const ColorForm = ({ initialData }: ColorFormProps) => {
-    const params = useParams<{ shopId: string }>();
+  const params = useParams<{ storeId: string }>();
 
-    const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
 
-    const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-    const title = initialData ? 'Edit color' : 'Create color';
-    const description = initialData ? 'Edit a color.' : 'Add a new color';
-    const action = initialData ? 'Save changes' : 'Create';
+  const title = initialData ? 'Edit color' : 'Create color';
+  const description = initialData ? 'Edit a color.' : 'Add a new color';
+  const action = initialData ? 'Save changes' : 'Create';
 
-    const form = useForm<z.infer<typeof ColorSchema>>({
-        resolver: zodResolver(ColorSchema),
-        defaultValues: initialData || {
-            name: '',
-        },
+  const form = useForm<z.infer<typeof ColorSchema>>({
+    resolver: zodResolver(ColorSchema),
+    defaultValues: initialData || {
+      name: '',
+    },
+  });
+
+  const onSubmit = async (values: z.infer<typeof ColorSchema>) => {
+    startTransition(() => {
+      if (initialData) {
+        updateColor(values, params.storeId, initialData.id);
+      } else {
+        createColor(values, params.storeId);
+      }
     });
+  };
 
-    const onSubmit = async (values: z.infer<typeof ColorSchema>) => {
-        startTransition(() => {
-            if (initialData) {
-                updateColor(values, params.shopId, initialData.id);
-            } else {
-                createColor(values, params.shopId);
-            }
-        });
-    };
+  const onDelete = async () => {
+    if (!initialData) {
+      return;
+    }
+    startTransition(() => {
+      deleteColor(initialData.id, params.storeId).then(() => setOpen(false));
+    });
+  };
 
-    const onDelete = async () => {
-        if (!initialData) {
-            return;
-        }
-        startTransition(() => {
-            deleteColor(initialData.id, params.shopId).then(() => setOpen(false));
-        });
-    };
-
-    return (
-        <>
-            <AlertModal
-                isOpen={open}
-                onClose={() => setOpen(false)}
-                onConfirm={onDelete}
-                loading={isPending}
+  return (
+    <>
+      <AlertModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        onConfirm={onDelete}
+        loading={isPending}
+      />
+      <div className='flex items-center justify-between'>
+        <Heading
+          title={title}
+          description={description}
+        />
+        {initialData && (
+          <Button
+            disabled={isPending}
+            variant='destructive'
+            size='sm'
+            onClick={() => setOpen(true)}
+          >
+            <Trash className='h-4 w-4' />
+          </Button>
+        )}
+      </div>
+      <Separator />
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className='space-y-8 w-full'
+        >
+          <div className='md:grid md:grid-cols-3 gap-8'>
+            <FormField
+              control={form.control}
+              name='name'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={isPending}
+                      placeholder='Color name'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            <div className='flex items-center justify-between'>
-                <Heading
-                    title={title}
-                    description={description}
-                />
-                {initialData && (
-                    <Button
+            <FormField
+              control={form.control}
+              name='value'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Value</FormLabel>
+                  <FormControl>
+                    <div className='flex items-center gap-x-4'>
+                      <Input
                         disabled={isPending}
-                        variant='destructive'
-                        size='sm'
-                        onClick={() => setOpen(true)}
-                    >
-                        <Trash className='h-4 w-4' />
-                    </Button>
-                )}
-            </div>
-            <Separator />
-            <Form {...form}>
-                <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className='space-y-8 w-full'
-                >
-                    <div className='md:grid md:grid-cols-3 gap-8'>
-                        <FormField
-                            control={form.control}
-                            name='name'
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Name</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            disabled={isPending}
-                                            placeholder='Color name'
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name='value'
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Value</FormLabel>
-                                    <FormControl>
-                                        <div className='flex items-center gap-x-4'>
-                                            <Input
-                                                disabled={isPending}
-                                                placeholder='Color value'
-                                                {...field}
-                                            />
-                                            <div
-                                                className='border p-4 rounded-full'
-                                                style={{ backgroundColor: field.value }}
-                                            />
-                                        </div>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                        placeholder='Color value'
+                        {...field}
+                      />
+                      <div
+                        className='border p-4 rounded-full'
+                        style={{ backgroundColor: field.value }}
+                      />
                     </div>
-                    <Button
-                        disabled={isPending}
-                        className='ml-auto'
-                        type='submit'
-                    >
-                        {action}
-                    </Button>
-                </form>
-            </Form>
-        </>
-    );
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <Button
+            disabled={isPending}
+            className='ml-auto'
+            type='submit'
+          >
+            {action}
+          </Button>
+        </form>
+      </Form>
+    </>
+  );
 };
