@@ -2,7 +2,7 @@ import { db } from '@/lib/db';
 
 import { ProductForm } from './_components/product-form';
 
-const ProductIdPage = async ({ params }: { params: { productId: string; shopId: string } }) => {
+const ProductIdPage = async ({ params }: { params: { productId: string; storeId: string } }) => {
     const product = await db.product.findUnique({
         where: {
             id: params.productId,
@@ -14,19 +14,19 @@ const ProductIdPage = async ({ params }: { params: { productId: string; shopId: 
 
     const categories = await db.category.findMany({
         where: {
-            shopId: params.shopId,
+            storeId: params.storeId,
         },
     });
 
     const sizes = await db.size.findMany({
         where: {
-            shopId: params.shopId,
+            storeId: params.storeId,
         },
     });
 
     const colors = await db.color.findMany({
         where: {
-            shopId: params.shopId,
+            storeId: params.storeId,
         },
     });
 

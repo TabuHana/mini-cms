@@ -8,9 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Size } from '@prisma/client';
 
-import { deleteSize } from '@/actions/delete-size';
-import { updateSize } from '@/actions/update-size';
-import { createSize } from '@/actions/create-size';
+import { createSize, updateSize,deleteSize } from '@/server/size';
 import { Heading } from '@/components/heading';
 import { Separator } from '@/components/ui/separator';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
@@ -25,7 +23,7 @@ type SizeFormProps = {
 };
 
 export const SizeForm = ({ initialData }: SizeFormProps) => {
-    const params = useParams<{ shopId: string }>();
+    const params = useParams<{ storeId: string }>();
 
     const [isPending, startTransition] = useTransition();
 
@@ -46,9 +44,9 @@ export const SizeForm = ({ initialData }: SizeFormProps) => {
     const onSubmit = async (values: z.infer<typeof SizeSchema>) => {
         startTransition(() => {
             if (initialData) {
-                updateSize(values, params.shopId, initialData.id);
+                updateSize(values, params.storeId, initialData.id);
             } else {
-                createSize(values, params.shopId);
+                createSize(values, params.storeId);
             }
         });
     };
@@ -58,7 +56,7 @@ export const SizeForm = ({ initialData }: SizeFormProps) => {
             return;
         }
         startTransition(() => {
-            deleteSize(initialData.id, params.shopId).then(() => setOpen(false));
+            deleteSize(initialData.id, params.storeId).then(() => setOpen(false));
         });
     };
 

@@ -8,9 +8,7 @@ import { Trash } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Billboard, Category } from '@prisma/client';
 
-import { createCategory } from '@/actions/create-category';
-import { updateCategory } from '@/actions/update-category';
-import { deleteCategory } from '@/actions/delete-category';
+import { createCategory, updateCategory, deleteCategory } from '@/server/category';
 
 import { Heading } from '@/components/heading';
 import { Separator } from '@/components/ui/separator';
@@ -22,137 +20,137 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AlertModal } from '@/components/modals/alert-modal';
 
 type CategoryFormProps = {
-    initialData: Category | null;
-    billboards: Billboard[];
+  initialData: Category | null;
+  billboards: Billboard[];
 };
 
 export const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
-    const params = useParams<{ shopId: string }>();
+  const params = useParams<{ storeId: string }>();
 
-    const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
 
-    const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-    const title = initialData ? 'Edit category' : 'Create category';
-    const description = initialData ? 'Edit your category' : 'Create a new category';
-    const action = initialData ? 'Save' : 'Create';
+  const title = initialData ? 'Edit category' : 'Create category';
+  const description = initialData ? 'Edit your category' : 'Create a new category';
+  const action = initialData ? 'Save' : 'Create';
 
-    const form = useForm<z.infer<typeof CategorySchema>>({
-        resolver: zodResolver(CategorySchema),
-        defaultValues: initialData || {
-            name: '',
-            billboardId: '',
-        },
+  const form = useForm<z.infer<typeof CategorySchema>>({
+    resolver: zodResolver(CategorySchema),
+    defaultValues: initialData || {
+      name: '',
+      billboardId: '',
+    },
+  });
+
+  const onSubmit = async (values: z.infer<typeof CategorySchema>) => {
+    startTransition(() => {
+      if (initialData) {
+        updateCategory(values, params.storeId, initialData.id);
+      } else {
+        createCategory(values, params.storeId);
+      }
     });
+  };
 
-    const onSubmit = async (values: z.infer<typeof CategorySchema>) => {
-        startTransition(() => {
-            if (initialData) {
-                updateCategory(values, params.shopId, initialData.id);
-            } else {
-                createCategory(values, params.shopId);
-            }
-        });
-    };
+  const onDelete = async () => {
+    if (!initialData) {
+      return;
+    }
+    startTransition(() => {
+      deleteCategory(initialData.id, params.storeId).then(() => setOpen(false));
+    });
+  };
 
-    const onDelete = async () => {
-        if (!initialData) {
-            return;
-        }
-        startTransition(() => {
-            deleteCategory(initialData.id, params.shopId).then(() => setOpen(false));
-        });
-    };
-
-    return (
-        <>
-            <AlertModal
-                isOpen={open}
-                onClose={() => setOpen(false)}
-                onConfirm={onDelete}
-                loading={isPending}
-            />
-            <div className='flex items-center justify-between'>
-                <Heading
-                    title={title}
-                    description={description}
-                />
-                {initialData && (
-                    <Button
-                        disabled={isPending}
-                        variant='destructive'
-                        size='sm'
-                        onClick={() => setOpen(true)}
-                    >
-                        <Trash className='h-4 w-4' />
-                    </Button>
-                )}
-            </div>
-            <Separator />
-            <Form {...form}>
-                <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className='space-y-8'
+  return (
+    <>
+      <AlertModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        onConfirm={onDelete}
+        loading={isPending}
+      />
+      <div className='flex items-center justify-between'>
+        <Heading
+          title={title}
+          description={description}
+        />
+        {initialData && (
+          <Button
+            disabled={isPending}
+            variant='destructive'
+            size='sm'
+            onClick={() => setOpen(true)}
+          >
+            <Trash className='h-4 w-4' />
+          </Button>
+        )}
+      </div>
+      <Separator />
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className='space-y-8'
+        >
+          <FormField
+            control={form.control}
+            name='name'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input
+                    disabled={isPending}
+                    placeholder='Category name'
+                    {...field}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='billboardId'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Billboard</FormLabel>
+                <Select
+                  disabled={isPending}
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  defaultValue={field.value}
                 >
-                    <FormField
-                        control={form.control}
-                        name='name'
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Name</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        disabled={isPending}
-                                        placeholder='Category name'
-                                        {...field}
-                                    />
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name='billboardId'
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Billboard</FormLabel>
-                                <Select
-                                    disabled={isPending}
-                                    onValueChange={field.onChange}
-                                    value={field.value}
-                                    defaultValue={field.value}
-                                >
-                                    <FormControl>
-                                        <SelectTrigger>
-                                            <SelectValue
-                                                defaultValue={field.value}
-                                                placeholder='Select a billboard'
-                                            />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        {billboards.map(billboard => (
-                                            <SelectItem
-                                                key={billboard.id}
-                                                value={billboard.id}
-                                            >
-                                                {billboard.label}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </FormItem>
-                        )}
-                    />
-                    <Button
-                        className='ml-auto'
-                        type='submit'
-                        disabled={isPending}
-                    >
-                        {action}
-                    </Button>
-                </form>
-            </Form>
-        </>
-    );
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue
+                        defaultValue={field.value}
+                        placeholder='Select a billboard'
+                      />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {billboards.map(billboard => (
+                      <SelectItem
+                        key={billboard.id}
+                        value={billboard.id}
+                      >
+                        {billboard.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
+          <Button
+            className='ml-auto'
+            type='submit'
+            disabled={isPending}
+          >
+            {action}
+          </Button>
+        </form>
+      </Form>
+    </>
+  );
 };

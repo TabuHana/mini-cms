@@ -4,7 +4,7 @@ import { Plus } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
-import { DataTable } from '@/components/data-table';
+import { DataTable } from '@/components/ui/data-table';
 import { Heading } from '@/components/heading';
 import { Separator } from '@/components/ui/separator';
 
@@ -23,9 +23,9 @@ export const SizeClient: React.FC<SizeClientProps> = ({ data }) => {
                 <div className='flex items-center justify-between'>
                     <Heading
                         title={`Total Sizes - ${data.length}`}
-                        description='Manage your sizes for your shop'
+                        description='Manage your sizes for your store'
                     />
-                    <Button onClick={() => router.push(`/${params.shopId}/sizes/new`)}>
+                    <Button onClick={() => router.push(`/${params.storeId}/sizes/new`)}>
                         <Plus className='mr-2 h-4 w-4' /> Add New
                     </Button>
                 </div>
