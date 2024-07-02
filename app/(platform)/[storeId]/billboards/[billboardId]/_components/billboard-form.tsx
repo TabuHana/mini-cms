@@ -6,9 +6,7 @@ import { useForm } from 'react-hook-form';
 
 import { Billboard } from '@prisma/client';
 
-import { createBillboard } from '@/actions/create-billboard';
-import { updateBillboard } from '@/actions/update-billboard';
-import { deleteBillboard } from '@/actions/delete-billboard';
+import { createBillboard, updateBillboard, deleteBillboard } from '@/server/billboard';
 import { Heading } from '@/components/heading';
 import { Separator } from '@/components/ui/separator';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';

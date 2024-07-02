@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Copy, Edit, MoreHorizontal, Trash } from 'lucide-react';
 
-import { deleteProduct } from '@/actions/delete-product';
+import { deleteProduct } from '@/server/product';
 import { AlertModal } from '@/components/modals/alert-modal';
 import {
     DropdownMenu,
@@ -22,7 +22,7 @@ type CellActionProps = {
 };
 
 export const CellAction = ({ data }: CellActionProps) => {
-    const params = useParams<{ shopId: string }>();
+    const params = useParams<{ storeId: string }>();
     const router = useRouter();
 
     const [isPending, startTransition] = useTransition();
@@ -31,7 +31,7 @@ export const CellAction = ({ data }: CellActionProps) => {
 
     const onConfirm = async () => {
         startTransition(() => {
-            deleteProduct(data.id, params.shopId).then(() => setOpen(false));
+            deleteProduct(data.id, params.storeId).then(() => setOpen(false));
         });
     };
 
@@ -62,7 +62,7 @@ export const CellAction = ({ data }: CellActionProps) => {
                     <DropdownMenuItem onClick={() => onCopy(data.id)}>
                         <Copy className='mr-2 h-4 w-4' /> Copy Id
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => router.push(`/${params.shopId}/products/${data.id}`)}>
+                    <DropdownMenuItem onClick={() => router.push(`/${params.storeId}/products/${data.id}`)}>
                         <Edit className='mr-2 h-4 w-4' /> Update
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setOpen(true)}>

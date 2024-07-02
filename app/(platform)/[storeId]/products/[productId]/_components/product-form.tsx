@@ -8,9 +8,7 @@ import { Trash } from 'lucide-react';
 import { Category, Color, Image, Product, Size } from '@prisma/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { createProduct } from '@/actions/create-product';
-import { updateProduct } from '@/actions/update-product';
-import { deleteProduct } from '@/actions/delete-product';
+import { createProduct, updateProduct, deleteProduct } from '@/server/product';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -30,7 +28,7 @@ interface ProductFormProps {
 }
 
 export const ProductForm = ({ initialData, categories, sizes, colors }: ProductFormProps) => {
-    const params = useParams<{ shopId: string }>();
+    const params = useParams<{ storeId: string }>();
 
     const [isPending, startTransition] = useTransition();
 
@@ -64,9 +62,9 @@ export const ProductForm = ({ initialData, categories, sizes, colors }: ProductF
     const onSubmit = async (values: z.infer<typeof ProductSchema>) => {
         startTransition(() => {
             if (initialData) {
-                updateProduct(values, params.shopId, initialData.id);
+                updateProduct(values, params.storeId, initialData.id);
             } else {
-                createProduct(values, params.shopId);
+                createProduct(values, params.storeId);
             }
         });
     };
@@ -76,7 +74,7 @@ export const ProductForm = ({ initialData, categories, sizes, colors }: ProductF
             return;
         }
         startTransition(() => {
-            deleteProduct(initialData.id, params.shopId).then(() => setOpen(false));
+            deleteProduct(initialData.id, params.storeId).then(() => setOpen(false));
         });
     };
 

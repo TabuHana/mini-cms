@@ -4,8 +4,8 @@ import { useState, useTransition } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Copy, Edit, MoreHorizontal, Trash } from 'lucide-react';
 
-// import { deleteBillboard } from '@/actions/delete-billboard';
-// import { AlertModal } from '@/components/modals/alert-modal';
+import { deleteBillboard } from '@/server/billboard';
+import { AlertModal } from '@/components/modals/alert-modal';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -41,12 +41,12 @@ export const CellAction = ({ data }: CellActionProps) => {
 
     return (
         <>
-            {/* <AlertModal
+            <AlertModal
                 isOpen={open}
                 onClose={() => setOpen(false)}
                 onConfirm={onConfirm}
                 loading={isPending}
-            /> */}
+            />
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button
