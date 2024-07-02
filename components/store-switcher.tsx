@@ -21,11 +21,11 @@ import {
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>;
 
-type ShopSwitcherProps = PopoverTriggerProps & {
+type StoreSwitcherProps = PopoverTriggerProps & {
   items: Record<string, any>[];
 };
 
-export const StoreSwitcher = ({ className, items = [] }: ShopSwitcherProps) => {
+export const StoreSwitcher = ({ className, items = [] }: StoreSwitcherProps) => {
   const storeModal = useStoreModal();
   const params = useParams();
   const router = useRouter();

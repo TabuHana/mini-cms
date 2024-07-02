@@ -37,8 +37,8 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
   const onSubmit = async (values: z.infer<typeof SettingsSchema>) => {
     try {
       startTransition(() => {
-        const storeName = updateStore(values, params.storeId);
-        toast(`Successfuly updated to ${storeName}`);
+        updateStore(values, params.storeId);
+        toast(`Successfuly updated!`);
       });
     } catch (error: any) {
       toast(error);

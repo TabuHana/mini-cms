@@ -3,6 +3,7 @@
 import { useHasMounted } from '@/hooks/use-has-mounted';
 import { Modal } from '@/components/ui/modal';
 import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 
 type Props = {
   isOpen: boolean;
@@ -38,7 +39,7 @@ export const AlertModal = ({ isOpen, loading, onClose, onConfirm }: Props) => {
           variant='destructive'
           onClick={onConfirm}
         >
-          Confirm
+          {loading ? <Loader2 className='animate-spin' /> : 'Confirm'}
         </Button>
       </div>
     </Modal>

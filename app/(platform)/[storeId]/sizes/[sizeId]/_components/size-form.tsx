@@ -3,7 +3,7 @@
 import * as z from 'zod';
 import { useState, useTransition } from 'react';
 import { useParams } from 'next/navigation';
-import { Trash } from 'lucide-react';
+import { Loader2, Trash } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Size } from '@prisma/client';
@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { SizeSchema } from '@/schemas';
 import { Button } from '@/components/ui/button';
 import { AlertModal } from '@/components/modals/alert-modal';
+import { toast } from 'sonner';
 
 
 type SizeFormProps = {
@@ -45,8 +46,10 @@ export const SizeForm = ({ initialData }: SizeFormProps) => {
         startTransition(() => {
             if (initialData) {
                 updateSize(values, params.storeId, initialData.id);
+                toast.success('Size updated!');
             } else {
                 createSize(values, params.storeId);
+                toast.success('Size created!');
             }
         });
     };
@@ -57,6 +60,7 @@ export const SizeForm = ({ initialData }: SizeFormProps) => {
         }
         startTransition(() => {
             deleteSize(initialData.id, params.storeId).then(() => setOpen(false));
+            toast.success('Size deleted');
         });
     };
 
@@ -127,7 +131,7 @@ export const SizeForm = ({ initialData }: SizeFormProps) => {
                         type='submit'
                         disabled={isPending}
                     >
-                        {action}
+                        {isPending ? <Loader2 className='animate-spin' /> : action}
                     </Button>
                 </form>
             </Form>

@@ -16,6 +16,7 @@ import {
 import { Button } from '@/components/ui/button';
 
 import { ColorColumn } from './columns';
+import { toast } from 'sonner';
 
 type CellActionProps = {
     data: ColorColumn;
@@ -32,6 +33,7 @@ export const CellAction = ({ data }: CellActionProps) => {
     const onConfirm = async () => {
         startTransition(() => {
             deleteColor(data.id, params.storeId).then(() => setOpen(false));
+            toast.success('Color deleted');
         });
     };
 

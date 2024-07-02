@@ -48,10 +48,10 @@ export const createSize = async (values: z.infer<typeof SizeSchema>, storeId: st
     });
 
     revalidatePath(`/${storeId}/sizes`);
-    redirect(`/${storeId}/sizes`);
   } catch (error) {
     return { error: 'AN ERROR HAS OCCURED CREATING YOUR SIZE' };
   }
+  redirect(`/${storeId}/sizes`);
 };
 
 export const updateSize = async (values: z.infer<typeof SizeSchema>, storeId: string, sizeId: string) => {
@@ -88,18 +88,23 @@ export const updateSize = async (values: z.infer<typeof SizeSchema>, storeId: st
 
   const { name, value } = validatedFields.data;
 
-  await db.size.update({
-    where: {
-      id: sizeId,
-      storeId,
-    },
-    data: {
-      name,
-      value,
-    },
-  });
+  try {
+    await db.size.update({
+      where: {
+        id: sizeId,
+        storeId,
+      },
+      data: {
+        name,
+        value,
+      },
+    });
 
-  revalidatePath(`/${storeId}/sizes`);
+    revalidatePath(`/${storeId}/sizes`);
+  } catch (error) {
+    return { error: 'AN ERROR HAS OCCURED UPDATING YOUR SIZE' };
+  }
+
   redirect(`/${storeId}/sizes`);
 };
 
@@ -140,13 +145,18 @@ export const deleteSize = async (sizeId: string, storeId: string) => {
     return { error: 'INVALID SIZE' };
   }
 
-  await db.size.delete({
-    where: {
-      id: sizeId,
-      storeId,
-    },
-  });
+  try {
+    await db.size.delete({
+      where: {
+        id: sizeId,
+        storeId,
+      },
+    });
 
-  revalidatePath(`/${storeId}/sizes`);
+    revalidatePath(`/${storeId}/sizes`);
+  } catch (error) {
+    return { error: 'AN ERROR HAS OCCURED DELETING YOUR SIZE' };
+  }
+
   redirect(`/${storeId}/sizes`);
 };

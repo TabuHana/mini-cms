@@ -4,7 +4,7 @@ import * as z from 'zod';
 import { useParams } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
-import { Trash } from 'lucide-react';
+import { Loader2, Trash } from 'lucide-react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Color } from '@prisma/client';
@@ -17,6 +17,7 @@ import { Separator } from '@/components/ui/separator';
 import { Heading } from '@/components/heading';
 import { AlertModal } from '@/components/modals/alert-modal';
 import { ColorSchema } from '@/schemas';
+import { toast } from 'sonner';
 
 interface ColorFormProps {
   initialData: Color | null;
@@ -44,8 +45,10 @@ export const ColorForm = ({ initialData }: ColorFormProps) => {
     startTransition(() => {
       if (initialData) {
         updateColor(values, params.storeId, initialData.id);
+        toast.success('Color updated!');
       } else {
         createColor(values, params.storeId);
+        toast.success('Color created!');
       }
     });
   };
@@ -56,6 +59,7 @@ export const ColorForm = ({ initialData }: ColorFormProps) => {
     }
     startTransition(() => {
       deleteColor(initialData.id, params.storeId).then(() => setOpen(false));
+      toast.success('Color deleted');
     });
   };
 
@@ -136,7 +140,7 @@ export const ColorForm = ({ initialData }: ColorFormProps) => {
             className='ml-auto'
             type='submit'
           >
-            {action}
+            {isPending ? <Loader2 className='animate-spin' /> : action}
           </Button>
         </form>
       </Form>

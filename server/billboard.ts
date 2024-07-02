@@ -48,10 +48,10 @@ export const createBillboard = async (values: z.infer<typeof BillboardSchema>, s
     });
 
     revalidatePath(`/${storeId}/billboards`);
-    redirect(`/${storeId}/billboards`);
   } catch (error) {
     return { error: 'AN ERROR HAS OCCURED CREATING YOUR BILLBOARD' };
   }
+  redirect(`/${storeId}/billboards`);
 };
 
 export const updateBillboard = async (
@@ -92,18 +92,23 @@ export const updateBillboard = async (
 
   const { label, imageUrl } = validatedFields.data;
 
-  await db.billboard.update({
-    where: {
-      id: billboardId,
-      storeId,
-    },
-    data: {
-      label,
-      imageUrl,
-    },
-  });
+  try {
+    await db.billboard.update({
+      where: {
+        id: billboardId,
+        storeId,
+      },
+      data: {
+        label,
+        imageUrl,
+      },
+    });
 
-  revalidatePath(`/${storeId}/billboards`);
+    revalidatePath(`/${storeId}/billboards`);
+  } catch (error) {
+    return { error: 'AN ERROR HAS OCCURED UPDATING YOUR BILLBOARD' };
+  }
+
   redirect(`/${storeId}/billboards`);
 };
 
@@ -144,13 +149,18 @@ export const deleteBillboard = async (billboardId: string, storeId: string) => {
     return { error: 'INVALID BILLBOARD' };
   }
 
-  await db.billboard.delete({
-    where: {
-      id: billboardId,
-      storeId,
-    },
-  });
+  try {
+    await db.billboard.delete({
+      where: {
+        id: billboardId,
+        storeId,
+      },
+    });
 
-  revalidatePath(`/${storeId}/billboards`);
+    revalidatePath(`/${storeId}/billboards`);
+  } catch (error) {
+    return { error: 'AN ERROR HAS OCCURED DELETING YOUR BILLBOARD' };
+  }
+
   redirect(`/${storeId}/billboards`);
 };

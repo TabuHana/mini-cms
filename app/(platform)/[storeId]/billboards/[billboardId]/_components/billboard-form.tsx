@@ -24,7 +24,7 @@ type BillboardFormProps = {
 };
 
 export const BillboardForm = ({ initialData }: BillboardFormProps) => {
-    const params = useParams<{ shopId: string }>();
+    const params = useParams<{ storeId: string }>();
 
     const [isPending, startTransition] = useTransition();
 
@@ -45,9 +45,9 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
     const onSubmit = async (values: z.infer<typeof BillboardSchema>) => {
         startTransition(() => {
             if (initialData) {
-                updateBillboard(values, params.shopId, initialData.id);
+                updateBillboard(values, params.storeId, initialData.id);
             } else {
-                createBillboard(values, params.shopId);
+                createBillboard(values, params.storeId);
             }
         });
     };
@@ -58,7 +58,7 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
         }
 
         startTransition(() => {
-            deleteBillboard(initialData.id, params.shopId);
+            deleteBillboard(initialData.id, params.storeId);
         });
     };
 

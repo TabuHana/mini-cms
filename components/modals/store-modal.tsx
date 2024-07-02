@@ -30,9 +30,9 @@ export const StoreModal = () => {
       const storeId = await createStore(values);
       storeModal.onClose();
       window.location.assign(`/${storeId}`);
-      toast('Store created!');
+      toast.success('Store created!');
     } catch (error: any) {
-      toast(error);
+      toast.error(error);
       console.error(error);
     }
   };

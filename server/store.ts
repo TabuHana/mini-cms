@@ -23,8 +23,10 @@ export const createStore = async (values: z.infer<typeof StoreSchema>) => {
 
   const { name } = validatedFields.data;
 
+  let store;
+
   try {
-    const store = await db.store.create({
+    store = await db.store.create({
       data: {
         name,
         userId,

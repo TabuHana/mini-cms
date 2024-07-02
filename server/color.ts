@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation';
 import { db } from '@/lib/db';
 import { ColorSchema } from '@/schemas';
 import { revalidatePath } from 'next/cache';
+import { toast } from 'sonner';
 
 export const createColor = async (values: z.infer<typeof ColorSchema>, storeId: string) => {
   const validatedFields = ColorSchema.safeParse(values);
@@ -47,11 +48,11 @@ export const createColor = async (values: z.infer<typeof ColorSchema>, storeId: 
       },
     });
 
-    revalidatePath(`/${storeId}/colors`);
-    redirect(`/${storeId}/colors`);
+    revalidatePath(`/${storeId}/colors/`);
   } catch (error) {
     return { error: 'AN ERROR HAS OCCURED CREATING YOUR COLOR' };
   }
+  redirect(`/${storeId}/colors`);
 };
 
 export const updateColor = async (values: z.infer<typeof ColorSchema>, storeId: string, colorId: string) => {
@@ -88,18 +89,23 @@ export const updateColor = async (values: z.infer<typeof ColorSchema>, storeId: 
 
   const { name, value } = validatedFields.data;
 
-  await db.color.update({
-    where: {
-      id: colorId,
-      storeId,
-    },
-    data: {
-      name,
-      value,
-    },
-  });
+  try {
+    await db.color.update({
+      where: {
+        id: colorId,
+        storeId,
+      },
+      data: {
+        name,
+        value,
+      },
+    });
 
-  revalidatePath(`/${storeId}/colors`);
+    revalidatePath(`/${storeId}/colors`);
+  } catch (error) {
+    return { error: 'AN ERROR HAS OCCURED UPDATING YOUR COLOR' };
+  }
+
   redirect(`/${storeId}/colors`);
 };
 
@@ -140,13 +146,19 @@ export const deleteColor = async (colorId: string, storeId: string) => {
     return { error: 'INVALID COLOR' };
   }
 
-  await db.color.delete({
-    where: {
-      id: colorId,
-      storeId,
-    },
-  });
+  try {
+    await db.color.delete({
+      where: {
+        id: colorId,
+        storeId,
+      },
+    });
 
-  revalidatePath(`/${storeId}/colors`);
+    revalidatePath(`/${storeId}/colors`);
+    toast.success('Color deleted!');
+  } catch (error) {
+    return { error: 'AN ERROR HAS OCCURED DELETING YOUR COLOR' };
+  }
+
   redirect(`/${storeId}/colors`);
 };

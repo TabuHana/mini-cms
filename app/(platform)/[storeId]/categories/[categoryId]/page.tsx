@@ -16,8 +16,8 @@ const CategoryIdPage = async ({ params }: { params: { storeId: string; category:
   });
 
   return (
-    <div className='flex-col bg-card shadow-2xl rounded-2xl hover:shadow-none transition'>
-      <div className='flex-1 space-y-4 p-8 pt-6'>
+    <div className='flex-col'>
+      <div className='flex-1 space-y-4'>
         <CategoryForm
           initialData={category}
           billboards={billboards}

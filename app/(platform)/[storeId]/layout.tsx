@@ -26,7 +26,7 @@ export default async function StoreLayout({
   });
 
   if (!store) {
-    redirect('/cms/setup');
+    redirect('/cms');
   }
 
   return (

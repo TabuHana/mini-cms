@@ -7,6 +7,9 @@ import { cn } from '@/lib/utils';
 import './globals.css';
 import { Toaster } from 'sonner';
 import { ModalProvider } from '@/providers/modal-provider';
+import { ourFileRouter } from './api/uploadthing/core';
+import { extractRouterConfig } from 'uploadthing/server';
+import { NextSSRPlugin } from '@uploadthing/react/next-ssr-plugin';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -29,6 +32,7 @@ export default function RootLayout({
         <body className={cn('min-h-screen bg-background font-nunito antialiased', inter.variable)}>
           <Toaster />
           <ModalProvider />
+          <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
           {children}
         </body>
       </html>

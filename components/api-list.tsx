@@ -13,7 +13,7 @@ export const ApiList: React.FC<ApiListProps> = ({ entityName, entityIdName }) =>
     const params = useParams();
     const origin = useOrigin();
 
-    const baseUrl = `${origin}/api/${params.shopId}`;
+    const baseUrl = `${origin}/api/${params.storeId}`;
 
     return (
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
