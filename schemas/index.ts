@@ -4,8 +4,8 @@ export const LoginSchema = z.object({
   email: z.string().email({
     message: 'Email is required',
   }),
-  password: z.string().min(1, {
-    message: 'Password is required',
+  password: z.string().min(8, {
+    message: 'Password must be at least 8 characters',
   }),
   code: z.optional(z.string()),
 });
