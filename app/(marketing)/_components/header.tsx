@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import { ClerkLoaded, ClerkLoading, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import { Loader } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -17,23 +16,6 @@ export const Header = () => {
           />
           <h1 className='text-2xl font-extrabold hover:cursor-default'>MiniCMS</h1>
         </div>
-        <ClerkLoading>
-          <Loader className='size-5 text-muted-foreground animate-spin' />
-        </ClerkLoading>
-        <ClerkLoaded>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-          <SignedOut>
-            <SignInButton
-              mode='modal'
-              forceRedirectUrl='/cms'
-              signUpForceRedirectUrl='/cms'
-            >
-              <Button>Login</Button>
-            </SignInButton>
-          </SignedOut>
-        </ClerkLoaded>
       </div>
     </header>
   );

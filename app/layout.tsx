@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { ClerkProvider } from '@clerk/nextjs';
 
 import { cn } from '@/lib/utils';
 
@@ -24,18 +23,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html
-        lang='en'
-        suppressHydrationWarning
-      >
-        <body className={cn('min-h-screen bg-background font-nunito antialiased', inter.variable)}>
-          <Toaster />
-          <ModalProvider />
-          <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-          {children}
-        </body>
-      </html>
-    </ClerkProvider>
+    <html
+      lang='en'
+      suppressHydrationWarning
+    >
+      <body className={cn('min-h-screen bg-background font-nunito antialiased', inter.variable)}>
+        <Toaster />
+        <ModalProvider />
+        <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
+        {children}
+      </body>
+    </html>
   );
 }

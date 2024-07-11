@@ -1,9 +1,11 @@
 import NextAuth from "next-auth"
-import { PrismaAdapter } from "@auth/prisma-adapter"
+import { DrizzleAdapter } from '@auth/drizzle-adapter';
 
-import { db } from '@/lib/db'
+import db from '@/server/db';
  
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(db),
-  providers: [],
+  adapter: DrizzleAdapter(db),
+  providers: [
+    
+  ],
 })
