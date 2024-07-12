@@ -7,41 +7,33 @@ import { AuthError } from 'next-auth';
 
 import db from '@/server/db';
 import { users } from '@/server/db/schema';
-import { RegisterSchema } from '@/schemas';
+import { LoginSchema } from '@/schemas';
 import { getUserByEmail } from '@/server/data/user';
 
-export const register = async (values: z.infer<typeof RegisterSchema>) => {
-  const validatedFields = RegisterSchema.safeParse(values);
+export const login = async (values: z.infer<typeof LoginSchema>) => {
+  const validatedFields = LoginSchema.safeParse(values);
 
   if (!validatedFields.success) {
     return { error: 'Invalid fields' };
   }
 
-  const { email, password, name } = validatedFields.data;
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const { email, password, code } = validatedFields.data;
 
   const existingUser = await getUserByEmail(email);
 
-  if (existingUser) {
-    return { error: 'Email already in use' };
-  }
-
-  try {
-    await db.insert(users).values({
-      email,
-      name,
-      password: hashedPassword,
-    });
-  } catch (error) {
-    return { error: 'Something went wrong' };
+  if (!existingUser || !existingUser.email || !existingUser.password) {
+    return { error: 'Email does not exist' };
   }
 
   // Email Verification
+
+  // Email 2FA
 
   try {
     await signIn('credentials', {
       email,
       password,
+      redirectTo: '/cms'
     });
   } catch (error) {
     if (error instanceof AuthError) {
