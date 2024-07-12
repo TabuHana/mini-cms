@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Poppins } from 'next/font/google';
 
 import { cn } from '@/lib/utils';
 
@@ -10,7 +10,12 @@ import { ourFileRouter } from './api/uploadthing/core';
 import { extractRouterConfig } from 'uploadthing/server';
 import { NextSSRPlugin } from '@uploadthing/react/next-ssr-plugin';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+const inter = Poppins({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
+});
 
 export const metadata: Metadata = {
   title: 'Create Next App',
