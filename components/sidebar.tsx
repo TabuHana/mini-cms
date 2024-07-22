@@ -14,7 +14,7 @@ import {
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
-import { ClerkLoaded, ClerkLoading, UserButton } from '@clerk/nextjs';
+
 import Link from 'next/link';
 
 export const Sidebar = () => {
@@ -101,12 +101,7 @@ export const Sidebar = () => {
         </div>
       </div>
       <div className='mb-5 p-4'>
-        <ClerkLoading>
-          <Loader className='size-5 text-muted-foreground animate-spin' />
-        </ClerkLoading>
-        <ClerkLoaded>
-          <UserButton afterSignOutUrl='/' />
-        </ClerkLoaded>
+        user btn
       </div>
     </div>
   );
