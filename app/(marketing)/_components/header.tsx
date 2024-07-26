@@ -13,7 +13,7 @@ export const Header = () => {
           <Logo />
         </div>
         <Button asChild>
-          <Link href='/auth/login'>Sign in</Link>
+          <Link href='/auth/sign-in'>Sign in</Link>
         </Button>
       </div>
     </header>

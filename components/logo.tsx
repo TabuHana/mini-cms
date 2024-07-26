@@ -1,11 +1,19 @@
 import { Package } from 'lucide-react';
 import Image from 'next/image';
+import { Button } from './ui/button';
+import Link from 'next/link';
 
 export const Logo = () => {
   return (
-    <div className='flex items-center gap-x-3'>
-      <Package />
-      <h1 className='font-semibold hover:cursor-default'>MiniCMS</h1>
-    </div>
+    <Button
+      variant='ghost'
+      size='sm'
+      asChild
+    >
+      <Link href='/' className='gap-x-2'>
+        <Package className='size-6' />
+        <h1 className='font-bold'>mini<span className='text-sky-400'>CMS</span></h1>
+      </Link>
+    </Button>
   );
 };

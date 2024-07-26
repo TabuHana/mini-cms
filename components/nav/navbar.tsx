@@ -1,16 +1,16 @@
-import { currentUser } from '@/lib/auth';
+import { SignedIn, UserButton } from '@clerk/nextjs';
+import { User } from '@clerk/nextjs/server';
 import { Logo } from '../logo';
-import { UserButton } from './user-button';
-import { Button } from '../ui/button';
-import Link from 'next/link';
 
 export const Navbar = async () => {
-  const user = await currentUser();
-
   return (
-    <nav className='h-[50px] border-b flex items-center justify-between px-6'>
-      <Logo />
-      {user && <UserButton />}
+    <nav className='h-16 border-b p-4'>
+      <div className='flex items-center justify-between max-w-screen-xl mx-auto'>
+        <SignedIn>
+          <Logo />
+          <UserButton />
+        </SignedIn>
+      </div>
     </nav>
   );
 };
