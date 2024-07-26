@@ -1,9 +1,9 @@
-import { Navbar } from '@/components/nav/navbar';
+import { BaseNav } from '@/components/nav/base-nav';
 
 export default function CMSLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <Navbar />
+      <BaseNav />
       {children}
     </>
   );
